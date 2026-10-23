@@ -17,6 +17,7 @@
   "vars": {
     // Comma-separated origins allowed by CORS. "*." matches one subdomain level,
     // e.g. "https://*.bpct-frontend.pages.dev" for Pages preview deployments.
-    "ALLOWED_ORIGINS": "http://localhost:5173,http://127.0.0.1:5173"
+    "ALLOWED_ORIGINS": "http://localhost:5173,http://127.0.0.1:5173,https://bpct.pages.dev,https://*.bpct.pages.dev"
+
   }
 }
