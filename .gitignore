@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+
+# Data (keep folder structure only)
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
+
+# Generated load scripts contain the full row-level dataset (rebuild with the pipeline)
+generated/*
+!generated/.gitkeep
+.ruff_cache/
+
+# Env / secrets
+.env
+.env.*
+.databrickscfg
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

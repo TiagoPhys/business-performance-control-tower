@@ -1,0 +1,12 @@
+{
+	"name": "business-performance-control-tower-api",
+	"main": "src/index.ts",
+	"d1_databases": [
+		{
+			"binding": "bpc_control_tower",
+			"database_name": "bpc-control-tower",
+			"database_id": "028fb4a3-9640-43ff-8a15-8c34c4a93baf",
+			"remote": true
+		}
+	]
+}
