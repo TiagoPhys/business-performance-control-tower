@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import sqlite3
 from pathlib import Path
 
@@ -128,3 +129,15 @@ def test_rows_written_estimate() -> None:
         seed.TableData("kpi_summary", columns, ((1,),)),
     ]
     assert seed.estimate_rows_written(tables) == 5
+
+
+def test_export_only_selected_tables(full_processed_dir: Path, tmp_path: Path) -> None:
+    sql = seed.export(full_processed_dir, tmp_path / "insights.sql", only=["insights"]).read_text(
+        encoding="utf-8"
+    )
+    assert 'DELETE FROM "insights";' in sql
+    assert 'INSERT INTO "insights"' in sql
+    tables_touched = set(re.findall(r'(?:DELETE FROM|INSERT INTO) "(\w+)"', sql))
+    assert tables_touched == {"insights"}
+    with pytest.raises(seed.SchemaMismatchError, match="Unknown tables"):
+        seed.export(full_processed_dir, tmp_path / "x.sql", only=["nope"])

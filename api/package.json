@@ -1,4 +1,25 @@
 {
-  "name": "api",
-  "private": true
+  "name": "bpct-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "cf-typegen": "wrangler types",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:seed:local": "wrangler d1 execute DB --local --file ../generated/seed.sql",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "db:seed:remote": "wrangler d1 execute DB --remote --file ../generated/seed.sql"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "1.4.0",
+    "@vitest/runner": "4.1.12",
+    "@vitest/snapshot": "4.1.12",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12",
+    "wrangler": "4.149.0"
+  }
 }

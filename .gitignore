@@ -25,6 +25,7 @@ generated/*
 # Env / secrets
 .env
 .env.*
+!.env.example
 .databrickscfg
 
 # OS / editor

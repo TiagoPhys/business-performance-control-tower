@@ -1,12 +1,22 @@
 {
-	"name": "business-performance-control-tower-api",
-	"main": "src/index.ts",
-	"d1_databases": [
-		{
-			"binding": "bpc_control_tower",
-			"database_name": "bpc-control-tower",
-			"database_id": "028fb4a3-9640-43ff-8a15-8c34c4a93baf",
-			"remote": true
-		}
-	]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bpct-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-06",
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bpc-control-tower",
+      // Replace with the id printed by `npx wrangler d1 create bpct-db` before deploying.
+      // Local development and tests work with this placeholder.
+      "database_id": "028fb4a3-9640-43ff-8a15-8c34c4a93baf",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // Comma-separated origins allowed by CORS. "*." matches one subdomain level,
+    // e.g. "https://*.bpct-frontend.pages.dev" for Pages preview deployments.
+    "ALLOWED_ORIGINS": "http://localhost:5173,http://127.0.0.1:5173"
+  }
 }

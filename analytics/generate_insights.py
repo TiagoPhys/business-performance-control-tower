@@ -33,6 +33,19 @@ HIGH_DISCOUNT_THRESHOLD = 0.2  # bands above 20% are compared with undiscounted 
 HIGH_DISCOUNT_BANDS = ("21-40%", "Over 40%")  # see calculate_kpis.DISCOUNT_BANDS
 MAX_EVIDENCE_ITEMS = 10
 
+REGIONAL_CAVEAT = (
+    "Regional results combine differences in product mix, discount levels and customer "
+    "segments. They describe what happened in the period, not why one region differs."
+)
+SUBCATEGORY_CAVEAT = (
+    "Totals cover the full period and every region. They show where losses were recorded, "
+    "not their cause; losses may be concentrated in a few orders or discount levels."
+)
+PRODUCT_CAVEAT = (
+    "Most products have only a handful of orders, so one large discounted order can turn "
+    "a product's total negative. Review the product's order lines before acting."
+)
+
 ASSOCIATION_CAVEAT = (
     "This is an observed association, not a measured effect: discount levels also vary "
     "with product, region and order mix, so the data alone cannot show how profit would "
@@ -170,6 +183,7 @@ def regional_insights(summary: pd.DataFrame) -> list[Insight]:
             ),
             metric_name="profit",
             metric_value=rounded(best["profit"], 2),
+            caveat=REGIONAL_CAVEAT,
             evidence=evidence,
         ),
         Insight(
@@ -187,6 +201,7 @@ def regional_insights(summary: pd.DataFrame) -> list[Insight]:
             ),
             metric_name="profit_margin",
             metric_value=rounded(worst["profit_margin"]),
+            caveat=REGIONAL_CAVEAT,
             evidence=evidence,
         ),
     ]
@@ -220,6 +235,7 @@ def negative_subcategory_insights(subcategories: pd.DataFrame) -> list[Insight]:
                 ),
                 metric_name="profit",
                 metric_value=rounded(row.profit, 2),
+                caveat=SUBCATEGORY_CAVEAT,
                 evidence={
                     "category": row.category,
                     "sales": rounded(row.sales, 2),
@@ -274,6 +290,7 @@ def high_sales_negative_profit_insight(
             ),
             metric_name="products_flagged",
             metric_value=float(len(flagged)),
+            caveat=PRODUCT_CAVEAT,
             evidence={
                 "sales_threshold": rounded(threshold, 2),
                 "quantile": HIGH_SALES_QUANTILE,

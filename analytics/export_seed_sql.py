@@ -289,10 +289,11 @@ def validate_seed(sql: str, tables: Sequence[TableData], schema_path: Path = SCH
 def estimate_rows_written(tables: Sequence[TableData]) -> int:
     """Approximate D1 rows written by a load into an empty DB (rows + index entries).
 
-    Tables with a rowid get one extra write per secondary index; only
-    ``order_lines(order_id)`` and ``products(product_id, product_name)`` have one.
+    Each secondary index costs one extra write per row: ``order_lines(order_id)``,
+    ``products(product_id, product_name)`` and the API's covering index on ``orders``
+    (``api/migrations/0002_api_indexes.sql``).
     """
-    extra_index_writes = {"order_lines": 1, "products": 1}
+    extra_index_writes = {"order_lines": 1, "products": 1, "orders": 1}
     return sum(len(t.rows) * (1 + extra_index_writes.get(t.name, 0)) for t in tables)
 
 
@@ -303,11 +304,21 @@ def export(
     processed_dir: Path = PROCESSED_DIR,
     output: Path = SEED_FILE,
     schema_path: Path = SCHEMA_FILE,
+    only: Sequence[str] | None = None,
 ) -> Path:
-    """Build, validate and write the seed file; return its path."""
+    """Build, validate and write the seed file; return its path.
+
+    ``only`` restricts the script to some tables (e.g. ``["insights"]``) so a small
+    change can be reloaded without rewriting every row; their rows are replaced.
+    """
     ensure_not_raw_dir(output)
     tables = load_all(read_schema(schema_path), processed_dir)
     metadata = dict(next(t for t in tables if t.name == "dataset_metadata").rows)
+    if only:
+        unknown = sorted(set(only) - set(TABLE_ORDER))
+        if unknown:
+            raise SchemaMismatchError(f"Unknown tables for --only: {unknown}")
+        tables = [t for t in tables if t.name in set(only)]
     sql = build_seed_sql(tables, metadata.get("source_sha256", "unknown"))
     validate_seed(sql, tables, schema_path)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -329,9 +340,14 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--processed-dir", type=Path, default=PROCESSED_DIR)
     parser.add_argument("--output", type=Path, default=SEED_FILE)
     parser.add_argument("--schema", type=Path, default=SCHEMA_FILE)
+    parser.add_argument(
+        "--only",
+        help="Comma-separated tables to export (e.g. insights); default: all tables",
+    )
     args = parser.parse_args(argv)
     setup_logging()
-    export(args.processed_dir, args.output, args.schema)
+    only = [name.strip() for name in args.only.split(",")] if args.only else None
+    export(args.processed_dir, args.output, args.schema, only)
 
 
 if __name__ == "__main__":

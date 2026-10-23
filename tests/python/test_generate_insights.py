@@ -129,3 +129,8 @@ def test_money_format(value: float, expected: str) -> None:
 def test_pct_and_slug() -> None:
     assert gi.pct(0.12467) == "12.5%"
     assert gi.slug("Office Supplies") == "office-supplies"
+
+
+def test_every_insight_has_a_caveat(frames: dict[str, pd.DataFrame]) -> None:
+    for insight in gi.generate(frames):
+        assert insight.caveat.strip(), insight.insight_id

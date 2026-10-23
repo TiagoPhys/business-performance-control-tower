@@ -47,22 +47,25 @@ uv run pytest            # unit tests use a synthetic fixture; real-data checks 
 uv run ruff check analytics tests
 ```
 
-Each stage takes `--help`. Paths can be overridden, for example `prepare_data --input other.csv --output-dir /tmp/out`.
+Each stage takes `--help`. `export_seed_sql --only insights` writes a script for just the listed tables, for small reloads. Paths can be overridden, for example `prepare_data --input other.csv --output-dir /tmp/out`.
 The pipeline refuses to write anywhere inside `data/raw/`.
 
 ### Loading into D1
 
 ```bash
 cd api
-npx wrangler d1 migrations apply <DB_NAME> --local           # or --remote
-npx wrangler d1 execute <DB_NAME> --local --file ../generated/seed.sql
+npm run db:migrate:local     # or db:migrate:remote
+npm run db:seed:local        # or db:seed:remote
 ```
+
+See [api/README.md](api/README.md) for the full local and deployment workflow.
 
 The seed can be re-run safely: it deletes existing rows (child tables first) and contains no `BEGIN`/`COMMIT`, which D1 rejects in SQL files.
 INSERTs are batched to at most 250 rows and 90 KB per statement, under D1's 100 KB statement limit.
 
-A load into an empty database writes about 41k rows. Deleted rows also count, so reloading a populated database costs about twice that.
+A load into an empty database writes about 46k rows, including index entries. Deleted rows also count, so reloading a populated database costs about twice that.
 The D1 free tier allows 100k rows written per day: **reload at most once a day.**
+A reload is close to that limit; to stay well clear, drop and recreate the database instead (see the API README).
 
 ## KPI definitions
 
@@ -145,7 +148,7 @@ A guard rejects any generated text containing causal phrases such as "causes", "
 analytics/        Python pipeline (config.py holds shared paths and constants)
 tests/python/     pytest suite (synthetic fixture in conftest.py)
 api/              Cloudflare Worker + D1 migrations
-frontend/         React app
+frontend/         React app (see frontend/README.md)
 data/raw/         source CSV (gitignored)
 data/processed/   pipeline outputs (gitignored)
 generated/        D1 seed script (gitignored: it contains the full row-level dataset)
