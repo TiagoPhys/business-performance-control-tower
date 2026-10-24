@@ -176,9 +176,9 @@ export function MethodologyPage() {
                   <DataTable columns={checkColumns} data={data.checks} caption="Data quality checks" getRowId={(c) => c.id} />
                   {data.issues.total > 0 && (
                     <div className="space-y-2">
-                      <h3 className="text-sm font-medium">
+                      <h2 className="text-sm font-medium">
                         Row-level findings ({formatNumber(data.issues.total)}{data.issues.truncated ? `, first ${data.issues.limit} shown` : ""})
-                      </h3>
+                      </h2>
                       <div className="overflow-x-auto rounded-md border">
                         <Table>
                           <TableHeader>

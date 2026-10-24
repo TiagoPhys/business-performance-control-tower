@@ -18,7 +18,8 @@ export function AppLayout() {
       </a>
       <AppSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+        {/* Sticky only on larger screens: on phones the filters would cover a third of the view. */}
+        <header className="z-10 border-b bg-background md:sticky md:top-0">
           <div className="flex h-12 items-center gap-2 px-4">
             <SidebarTrigger aria-label="Toggle navigation" />
             <Separator orientation="vertical" className="mr-1 h-4" />
@@ -30,9 +31,10 @@ export function AppLayout() {
             </div>
           )}
         </header>
-        <main id="main" tabIndex={-1} className="flex-1 space-y-6 p-4 outline-none md:p-6">
+        {/* SidebarInset is already the <main> landmark; this is the skip-link target. */}
+        <div id="main" tabIndex={-1} className="flex-1 space-y-6 p-4 outline-none md:p-6">
           <Outlet />
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

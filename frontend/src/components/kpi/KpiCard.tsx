@@ -65,7 +65,7 @@ export function KpiCard({
         </Popover>
       </CardHeader>
       <CardContent className="space-y-1 px-4">
-        <p className="text-2xl font-semibold tabular-nums">{definition.format(value)}</p>
+        <p className="text-xl font-semibold tabular-nums sm:text-2xl">{definition.format(value)}</p>
         {comparison.available ? (
           <p className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
             <ChangeBadge definition={definition} change={comparison.change[definition.key]} />
@@ -86,7 +86,7 @@ export function KpiCard({
 export function KpiGrid({ kpis, comparison, keys }: { kpis: Kpis; comparison: Comparison; keys?: KpiKey[] }) {
   const definitions = keys ? KPI_DEFINITIONS.filter((d) => keys.includes(d.key)) : KPI_DEFINITIONS;
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
       {definitions.map((definition) => (
         <KpiCard key={definition.key} definition={definition} value={kpis[definition.key]} comparison={comparison} />
       ))}

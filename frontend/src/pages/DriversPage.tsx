@@ -6,7 +6,7 @@ import { DataTable, ExportButton } from "@/components/data/DataTable";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { NoResults, QueryBoundary } from "@/components/states/States";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InsightsPanel } from "@/features/insights/InsightCard";
 import { useBreakdowns, useInsights } from "@/hooks/useApi";
 import { useFilters } from "@/hooks/useFilters";
@@ -82,8 +82,7 @@ export function DriversPage() {
             </TabsTrigger>
           ))}
         </TabsList>
-      </Tabs>
-
+        <TabsContent value={dimension} className="mt-2">
       <QueryBoundary query={breakdowns} loadingRows={6}>
         {({ data }) => {
           if (data.rows.length === 0) return <NoResults what={`${label} results`} />;
@@ -122,6 +121,8 @@ export function DriversPage() {
           );
         }}
       </QueryBoundary>
+        </TabsContent>
+      </Tabs>
 
       <QueryBoundary query={insights}>
         {({ data }) => (data.items.length ? <InsightsPanel insights={data.items} title="Driver insights" /> : null)}
