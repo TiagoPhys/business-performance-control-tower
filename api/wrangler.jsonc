@@ -8,16 +8,13 @@
     {
       "binding": "DB",
       "database_name": "bpc-control-tower",
-      // Replace with the id printed by `npx wrangler d1 create bpct-db` before deploying.
-      // Local development and tests work with this placeholder.
       "database_id": "028fb4a3-9640-43ff-8a15-8c34c4a93baf",
       "migrations_dir": "migrations"
     }
   ],
   "vars": {
     // Comma-separated origins allowed by CORS. "*." matches one subdomain level,
-    // e.g. "https://*.bpct-frontend.pages.dev" for Pages preview deployments.
-    "ALLOWED_ORIGINS": "http://localhost:5173,http://127.0.0.1:5173,https://bpct.pages.dev,https://*.bpct.pages.dev"
-
+    // e.g. "https://*.business-performance-control-tower.pages.dev" for Pages preview deployments.
+    "ALLOWED_ORIGINS": "http://localhost:5173,http://127.0.0.1:5173,https://business-performance-control-tower.pages.dev,https://*.business-performance-control-tower.pages.dev"
   }
 }
