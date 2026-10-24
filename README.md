@@ -2,6 +2,23 @@
 
 A portfolio analytics product built on the Sample Superstore Sales dataset.
 
+## Live demo
+
+**[business-performance-control-tower.pages.dev](https://business-performance-control-tower.pages.dev/)**
+
+| Section | What you'll find |
+|---|---|
+| Overview | KPI cards with previous-period comparison, monthly sales and profit, priority insights |
+| Performance Drivers | Sales, profit and margin by region, segment, category and sub-category |
+| Product Performance | Sub-category profitability and a searchable, sortable product table |
+| Operations | Days from order to shipment by region and ship mode |
+| Action Plan | Track follow-up actions on the insights (saved in your browser) |
+| Methodology & Data Quality | Data source, metric definitions, validation checks and limitations |
+
+Filters (period, region, segment, category, ship mode) are kept in the URL, so any view can be shared. The API behind it is public and read-only, for example [`/api/overview`](https://bpct-api.bpc-control-tower.workers.dev/api/overview?start=2017-01-01&end=2017-12-31).
+
+## Stack
+
 | Layer | Stack |
 |---|---|
 | Data preparation & analysis | Python, pandas, DuckDB, pytest |
